@@ -8,12 +8,10 @@ interface CreateEditModalProps {
     isEdit: boolean;
     showModal: boolean;
     applicationName?: string;
-    initialEventType?: EventType;
-    isLoading?: boolean;
+    initialEventType?: Partial<EventType>;
+    isLoading: boolean;
     onClose: () => void;
     onSubmit: (eventType: Partial<EventType>) => void;
-    eventTypeQuery: unknown;
-
 }
 
 export const CreateEditModal: React.FunctionComponent<CreateEditModalProps> = (props) => {
@@ -63,7 +61,7 @@ export const CreateEditModal: React.FunctionComponent<CreateEditModalProps> = (p
                         /></FormGroup>
                     <FormGroup label='Description' fieldId='description'
                         helperText='Optional short description that appears in the UI
-                                                to help admin descide how to notify users.'>
+                                                to help admin decide how to notify users.'>
                         <TextArea
                             type='text'
                             value={ eventType.description }
@@ -72,9 +70,10 @@ export const CreateEditModal: React.FunctionComponent<CreateEditModalProps> = (p
                             name="description"
                         /></FormGroup>
                     <ActionGroup>
-                        <Button variant='primary' type='submit'
-                            { ...props.isLoading ? <Spinner /> : props.eventTypeQuery }
-                            onClick={ onSubmitLocal }>{ props.isEdit ? 'Update' : 'Submit' }</Button>
+                        <Button variant='primary' type='submit' isLoading={ props.isLoading } isDisabled={ props.isLoading }
+                            onClick={ onSubmitLocal }>
+                            { props.isEdit ? 'Update' : 'Submit' }
+                        </Button>
                         <Button variant='link' type='reset'
                             onClick={ props.onClose }>Cancel</Button>
                     </ActionGroup>
