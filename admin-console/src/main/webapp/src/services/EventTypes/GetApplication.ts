@@ -12,7 +12,8 @@ const validateResponse = validationResponseTransformer(
                 id: payload.value.id ?? '',
                 displayName: payload.value.display_name,
                 name: payload.value.name,
-                bundleId: payload.value.bundle_id };
+                bundleId: payload.value.bundle_id
+            };
 
             return validatedResponse(
                 'Application',
