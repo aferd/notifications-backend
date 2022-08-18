@@ -84,7 +84,6 @@ export const EmailTemplatePage: React.FunctionComponent = () => {
     };
 
     const handleSubmit = React.useCallback(() => {
-        console.log(template);
         if (template && template.data && template.name && template?.description) {
             const mutate = newTemplate.mutate;
             mutate({
