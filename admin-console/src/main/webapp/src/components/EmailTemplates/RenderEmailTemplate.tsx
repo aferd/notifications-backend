@@ -1,8 +1,8 @@
 import * as React from 'react';
 import {Button, Form, FormGroup, HelperText, HelperTextItem, PageSection, Skeleton, SkeletonProps, Spinner, Split, SplitItem, StackItem, TextInput, Title} from '@patternfly/react-core';
 import {CodeEditor, Language} from '@patternfly/react-code-editor';
-import { useRenderEmailRequest } from '../../services/RenderEmailRequest';
 import { Template } from '../../types/Notifications';
+import { useRenderTemplateRequest } from '../../services/RenderTemplateRequest';
 
 export interface  EmailTemplateFormProps {
     isLoading: boolean;
@@ -48,7 +48,7 @@ type RenderedTemplateProps = {
 } | {
    isLoading: false;
    succeeded: true;
-   template: Array<string>;
+   template: string;
 } | {
     isLoading: false;
     succeeded: false;
@@ -85,14 +85,13 @@ const RenderedTemplate: React.FunctionComponent<RenderedTemplateProps> = props =
 };
 
 export const RenderEmailTemplateForm: React.FunctionComponent<EmailTemplateFormProps> = props => {
-    const emailTemplate = useRenderEmailRequest();
+    const emailTemplate = useRenderTemplateRequest();
     const [ payload, setPayload ] = React.useState<string | undefined>(defaultPayload);
 
     React.useEffect(() => {
         const mutate = emailTemplate.mutate;
         mutate({
-            subject: '',
-            body: props.template.data ?? '',
+            template: props.template.data ?? '',
             payload: payload ?? ''
         });
         // We only want to activate this once
@@ -109,7 +108,7 @@ export const RenderEmailTemplateForm: React.FunctionComponent<EmailTemplateFormP
         renderedProps = {
             isLoading: false,
             succeeded: true,
-            template: emailTemplate.payload.value.result ?? []
+            template: emailTemplate.payload.value.result ? emailTemplate.payload.value.result[0] : ''
         };
     } else if (emailTemplate.payload?.status === 400) {
         renderedProps = {
@@ -128,8 +127,7 @@ export const RenderEmailTemplateForm: React.FunctionComponent<EmailTemplateFormP
     const onRender = React.useCallback(() => {
         const mutate = emailTemplate.mutate;
         mutate({
-            subject: '',
-            body: props.template.data ?? '',
+            template: props.template.data ?? '',
             payload: payload ?? ''
         });
     }, [ emailTemplate.mutate, payload, props.template.data ]);
